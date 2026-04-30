@@ -1,0 +1,125 @@
+/* ── Fonts ── */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Caveat:wght@500&display=swap');
+
+/* ── Tokens ── */
+:root {
+  --linen:        #f0ebe0;
+  --linen-dark:   #e8e1d4;
+  --teal:         #3d6b63;
+  --teal-dark:    #2e5249;
+  --teal-muted:   #4a7b72;
+  --sand:         #d9cdb8;
+  --blush:        #f5e8e0;
+  --sage-card:    #e4ebe6;
+  --text-body:    #5a534a;
+  --text-dark:    #2e2820;
+  --radius-card:  24px;
+  --radius-pill:  100px;
+  --max-w:        1200px;
+
+  /* Typography scale */
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-accent:  'Caveat', cursive;
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--linen);
+  color: var(--text-body);
+  font-size: 1rem;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+}
+
+img { display: block; max-width: 100%; }
+
+a { color: inherit; text-decoration: none; }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--teal);
+  line-height: 1.15;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+h1 { font-size: clamp(2.5rem, 5vw, 3.75rem); }
+h2 { font-size: clamp(2rem, 4vw, 3.25rem); }
+h3 { font-size: clamp(1.4rem, 2.5vw, 1.75rem); }
+
+p {
+  font-weight: 300;
+}
+
+/* ── Utilities ── */
+.container {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 48px;
+}
+
+@media (max-width: 768px) {
+  .container { padding: 0 24px; }
+}
+
+/* ── Scroll Reveal Animations ── */
+[data-animate] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-animate="fade-in"] {
+  transform: translateY(0);
+}
+
+[data-animate].revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Custom cursor glow (dream-like feel) ── */
+.cursor-glow {
+  position: fixed;
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(61, 107, 99, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.4s ease;
+  opacity: 0;
+}
+.cursor-glow.active {
+  opacity: 1;
+}
+
+/* ── Page load animation ── */
+@keyframes pageEnter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+body {
+  animation: pageEnter 0.7s ease-out;
+}
+
+/* ── Selection color ── */
+::selection {
+  background: rgba(61, 107, 99, 0.15);
+  color: var(--teal-dark);
+}

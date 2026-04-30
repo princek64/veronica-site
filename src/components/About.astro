@@ -1,0 +1,150 @@
+---
+import { content } from '../content.js';
+
+// Resolve about image: prefer local file, fall back to external URL
+const aboutSrc = content.aboutImage
+  ? `/images/${content.aboutImage}`
+  : content.aboutImageExternal;
+---
+<section class="about" id="about">
+  <div class="container about__inner">
+
+    <div class="about__image-wrap" data-animate="fade-up">
+      <div class="about__image-container">
+        <img
+          src={aboutSrc}
+          alt={content.aboutImageAlt}
+          class="about__photo"
+          loading="lazy"
+        />
+      </div>
+    </div>
+
+    <div class="about__text" data-animate="fade-up" data-delay="200">
+      <p class="about__eyebrow">{content.aboutEyebrow}</p>
+      <h2 class="about__heading">{content.aboutHeading}</h2>
+      <div class="about__body">
+        {content.aboutBio.map(paragraph => (
+          <p>{paragraph}</p>
+        ))}
+      </div>
+      <p class="about__signature">{content.signatureName}</p>
+
+      <!-- Credentials badges -->
+      <div class="about__credentials">
+        {content.credentials.map(cred => (
+          <span class="about__badge">{cred}</span>
+        ))}
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+.about {
+  padding: 120px 0;
+}
+.about__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.about__image-container {
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 24px 64px rgba(61, 107, 99, 0.12);
+  border: 3px solid rgba(61, 107, 99, 0.08);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.about__image-container:hover {
+  transform: scale(1.02);
+  box-shadow: 0 32px 80px rgba(61, 107, 99, 0.18);
+}
+.about__photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.about__eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--teal-muted);
+  margin-bottom: 16px;
+  font-weight: 400;
+}
+.about__heading {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4vw, 52px);
+  font-weight: 400;
+  margin-bottom: 28px;
+  letter-spacing: -0.01em;
+}
+.about__body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  font-size: 15.5px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--text-body);
+  margin-bottom: 36px;
+}
+.about__body em {
+  font-style: italic;
+  color: var(--teal-muted);
+}
+.about__signature {
+  font-family: var(--font-accent);
+  font-size: 32px;
+  color: var(--teal);
+  font-weight: 500;
+  margin-bottom: 28px;
+}
+
+/* Credential badges */
+.about__credentials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.about__badge {
+  display: inline-block;
+  padding: 7px 16px;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--teal-muted);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  border: 1px solid rgba(61, 107, 99, 0.15);
+  transition: all 0.25s ease;
+}
+.about__badge:hover {
+  background: var(--teal);
+  color: white;
+  border-color: var(--teal);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 900px) {
+  .about__inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .about__image-container {
+    max-width: 260px;
+    margin: 0 auto;
+  }
+}
+</style>

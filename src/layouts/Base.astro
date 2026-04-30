@@ -1,0 +1,72 @@
+---
+import { content } from '../content.js';
+export interface Props {
+  title?: string;
+}
+const { title = content.siteTitle } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content={content.metaDescription} />
+  <title>{title}</title>
+  <link rel="stylesheet" href="/styles/global.css" />
+</head>
+<body>
+  <!-- Dreamy cursor glow -->
+  <div class="cursor-glow" id="cursor-glow"></div>
+
+  <slot />
+
+  <!-- Global interactivity scripts -->
+  <script is:inline>
+    // ── Scroll Reveal Animation ──
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const delay = entry.target.getAttribute('data-delay') || 0;
+          setTimeout(() => {
+            entry.target.classList.add('revealed');
+          }, parseInt(delay));
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.15,
+      rootMargin: '0px 0px -50px 0px'
+    });
+
+    document.querySelectorAll('[data-animate]').forEach(el => {
+      revealObserver.observe(el);
+    });
+
+    // ── Cursor Glow Effect (desktop only) ──
+    const cursorGlow = document.getElementById('cursor-glow');
+    if (window.matchMedia('(hover: hover)').matches && cursorGlow) {
+      document.addEventListener('mousemove', (e) => {
+        cursorGlow.style.left = e.clientX + 'px';
+        cursorGlow.style.top = e.clientY + 'px';
+        cursorGlow.classList.add('active');
+      });
+      document.addEventListener('mouseleave', () => {
+        cursorGlow.classList.remove('active');
+      });
+    }
+
+    // ── Smooth parallax on labyrinth image ──
+    const labyrinthImg = document.querySelector('.hero__labyrinth-img-wrap img');
+    if (labyrinthImg && window.matchMedia('(hover: hover)').matches) {
+      window.addEventListener('scroll', () => {
+        const rect = labyrinthImg.parentElement.getBoundingClientRect();
+        const scrollProgress = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
+        if (scrollProgress > 0 && scrollProgress < 1) {
+          const yOffset = (scrollProgress - 0.5) * 30;
+          labyrinthImg.style.transform = `translateY(${yOffset}px) scale(1.05)`;
+        }
+      }, { passive: true });
+    }
+  </script>
+</body>
+</html>

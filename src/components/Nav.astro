@@ -1,0 +1,227 @@
+---
+import { content } from '../content.js';
+const firstName = content.practiceName;
+---
+<header class="nav">
+  <div class="container nav__inner">
+    <a href="#" class="nav__logo">
+      <span class="nav__logo-name">{firstName}</span>
+      <span class="nav__logo-dot"></span>
+    </a>
+    <nav class="nav__links">
+      {content.navLinks.map(link => (
+        <a href={link.href}>{link.label}</a>
+      ))}
+    </nav>
+    <button class="nav__burger" aria-label="Menu" id="burger">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div class="nav__mobile-menu" id="mobile-menu">
+  {content.navLinks.map(link => (
+    <a href={link.href}>{link.label}</a>
+  ))}
+</div>
+
+<style>
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--linen);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s, backdrop-filter 0.3s, background 0.3s;
+}
+.nav.scrolled {
+  border-color: rgba(217, 205, 184, 0.5);
+  background: rgba(240, 235, 224, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.nav__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+
+/* ── Creative Logo ── */
+.nav__logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  position: relative;
+}
+.nav__logo-name {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--teal-dark);
+  letter-spacing: 0.02em;
+  font-style: italic;
+  transition: color 0.3s;
+}
+.nav__logo-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--teal-muted);
+  opacity: 0.6;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s;
+}
+.nav__logo:hover .nav__logo-name {
+  color: var(--teal);
+}
+.nav__logo:hover .nav__logo-dot {
+  transform: scale(1.5);
+  opacity: 1;
+}
+
+.nav__links {
+  display: flex;
+  gap: 36px;
+}
+.nav__links a {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-body);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color 0.25s;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav__links a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 1px;
+  background: var(--teal);
+  transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+              left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav__links a:hover::after,
+.nav__links a.active::after {
+  width: 100%;
+  left: 0%;
+}
+.nav__links a:hover { color: var(--teal); }
+.nav__links a.active { color: var(--teal); }
+.nav__burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+.nav__burger span {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: var(--teal-dark);
+  border-radius: 2px;
+  transition: transform 0.3s, opacity 0.3s;
+}
+
+/* Mobile menu */
+.nav__mobile-menu {
+  display: none;
+  position: fixed;
+  top: 72px;
+  left: 0;
+  right: 0;
+  background: rgba(240, 235, 224, 0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 36px 48px;
+  flex-direction: column;
+  gap: 28px;
+  z-index: 99;
+  border-bottom: 1px solid var(--sand);
+  animation: slideDown 0.3s ease;
+}
+.nav__mobile-menu.open { display: flex; }
+.nav__mobile-menu a {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--text-body);
+  transition: color 0.2s;
+  letter-spacing: 0.01em;
+}
+.nav__mobile-menu a:hover { color: var(--teal); }
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 640px) {
+  .nav__links { display: none; }
+  .nav__burger { display: flex; }
+}
+</style>
+
+<script>
+  const nav = document.querySelector('.nav');
+  const burger = document.getElementById('burger');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  window.addEventListener('scroll', () => {
+    nav?.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // Mobile menu toggle
+  burger?.addEventListener('click', () => {
+    mobileMenu?.classList.toggle('open');
+  });
+
+  // Close mobile menu on link click
+  mobileMenu?.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu?.classList.remove('open');
+    });
+  });
+
+  // Active nav link tracking — delayed start to prevent highlighting on initial load
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav__links a');
+
+  // Don't start observing until user has actually scrolled
+  let observerStarted = false;
+
+  function startSectionObserver() {
+    if (observerStarted) return;
+    observerStarted = true;
+
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+          });
+        }
+      });
+    }, { threshold: 0.3, rootMargin: '-72px 0px -40% 0px' });
+
+    sections.forEach(section => sectionObserver.observe(section));
+  }
+
+  // Only begin tracking after user scrolls past the hero area
+  function onScroll() {
+    if (window.scrollY > 300) {
+      startSectionObserver();
+      window.removeEventListener('scroll', onScroll);
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>

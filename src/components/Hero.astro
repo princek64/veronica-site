@@ -1,0 +1,210 @@
+---
+import { content } from '../content.js';
+
+// Split heading on \n for line breaks
+const headingLines = content.heroHeading.split('\n');
+
+// Resolve hero image: if heroImage is set, use /images/ path, else use the unsplash URL
+const heroSrc = content.heroImage
+  ? `/images/${content.heroImage}`
+  : "https://images.unsplash.com/photo-1621655998212-b44afa24794a?q=80&w=687&auto=format&fit=crop";
+
+const labyrinthSrc = `/images/${content.labyrinthImage}`;
+---
+<section class="hero">
+  <div class="container hero__inner">
+    <div class="hero__text" data-animate="fade-up">
+      <p class="hero__eyebrow">{content.heroEyebrow}</p>
+      <h1 class="hero__heading">
+        {headingLines.map((line, i) => (
+          <>
+            {line}{i < headingLines.length - 1 && <br/>}
+          </>
+        ))}
+      </h1>
+      <p class="hero__sub">{content.heroSubtext}</p>
+      <a href="#connect" class="hero__cta">
+        {content.heroCta}
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+    <div class="hero__image-wrap" data-animate="fade-up" data-delay="200">
+      <div class="hero__image-placeholder" aria-label={content.heroImageAlt}>
+        <img src={heroSrc} alt={content.heroImageAlt} loading="lazy" />
+      </div>
+      <!-- Floating moon decoration -->
+      <div class="hero__moon"></div>
+    </div>
+  </div>
+
+  <!-- Labyrinth image as a full-width atmospheric section -->
+  <div class="hero__labyrinth" data-animate="fade-in" data-delay="400">
+    <div class="hero__labyrinth-img-wrap">
+      <img src={labyrinthSrc} alt={content.labyrinthAlt} loading="lazy" />
+      <div class="hero__labyrinth-overlay"></div>
+      <p class="hero__labyrinth-caption">{content.labyrinthCaption}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+.hero {
+  padding: 100px 0 0;
+}
+.hero__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+.hero__eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--teal-muted);
+  margin-bottom: 24px;
+  font-weight: 400;
+}
+.hero__heading {
+  font-family: var(--font-display);
+  font-size: clamp(44px, 5vw, 64px);
+  font-weight: 400;
+  color: var(--teal-dark);
+  margin-bottom: 28px;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+.hero__sub {
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--text-body);
+  max-width: 420px;
+  margin-bottom: 40px;
+  line-height: 1.75;
+}
+.hero__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--teal);
+  color: white;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 16px 32px;
+  border-radius: var(--radius-pill);
+  transition: background 0.25s, transform 0.25s, box-shadow 0.35s;
+}
+.hero__cta:hover {
+  background: var(--teal-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(61, 107, 99, 0.25);
+}
+.hero__image-wrap {
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+.hero__image-placeholder {
+  width: 100%;
+  max-width: 460px;
+  aspect-ratio: 3/4;
+  border-radius: 28px;
+  overflow: hidden;
+  background: var(--linen-dark);
+}
+.hero__image-placeholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Floating moon */
+.hero__moon {
+  position: absolute;
+  top: -20px;
+  right: -10px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, var(--sand) 0%, var(--linen-dark) 100%);
+  opacity: 0.5;
+  animation: moonFloat 8s ease-in-out infinite;
+}
+
+@keyframes moonFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-14px) rotate(4deg); }
+}
+
+/* ── Labyrinth section ── */
+.hero__labyrinth {
+  margin-top: 100px;
+  padding: 0 48px;
+  max-width: var(--max-w);
+  margin-left: auto;
+  margin-right: auto;
+}
+.hero__labyrinth-img-wrap {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+}
+.hero__labyrinth-img-wrap img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  display: block;
+  transition: transform 6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hero__labyrinth-img-wrap:hover img {
+  transform: scale(1.03);
+}
+.hero__labyrinth-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(46, 82, 73, 0.55) 0%,
+    rgba(46, 82, 73, 0.15) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+.hero__labyrinth-caption {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.9);
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-style: italic;
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  text-align: center;
+  pointer-events: none;
+  white-space: nowrap;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+
+@media (max-width: 900px) {
+  .hero__inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .hero__image-wrap { order: -1; }
+  .hero__image-placeholder { max-width: 100%; aspect-ratio: 4/3; }
+  .hero__labyrinth { padding: 0 24px; margin-top: 60px; }
+  .hero__labyrinth-img-wrap img { height: 260px; }
+  .hero__labyrinth-caption {
+    font-size: 16px;
+    bottom: 20px;
+  }
+}
+</style>

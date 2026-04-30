@@ -1,0 +1,105 @@
+/* ── Fonts ── */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500&family=Caveat:wght@500&display=swap');
+
+/* ── Tokens ── */
+:root {
+  --linen:        #f0ebe0;
+  --linen-dark:   #e8e1d4;
+  --teal:         #3d6b63;
+  --teal-dark:    #2e5249;
+  --teal-muted:   #4a7b72;
+  --sand:         #d9cdb8;
+  --blush:        #f5e8e0;
+  --sage-card:    #e4ebe6;
+  --text-body:    #5a534a;
+  --text-dark:    #2e2820;
+  --radius-card:  24px;
+  --radius-pill:  100px;
+  --max-w:        1200px;
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--linen);
+  color: var(--text-body);
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img { display: block; max-width: 100%; }
+
+a { color: inherit; text-decoration: none; }
+
+h1, h2, h3, h4 {
+  font-family: 'Cormorant Garamond', serif;
+  color: var(--teal);
+  line-height: 1.2;
+}
+
+/* ── Utilities ── */
+.container {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 48px;
+}
+
+@media (max-width: 768px) {
+  .container { padding: 0 24px; }
+}
+
+/* ── Scroll Reveal Animations ── */
+[data-animate] {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+[data-animate="fade-in"] {
+  transform: translateY(0);
+}
+
+[data-animate].revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Custom cursor glow (dream-like feel) ── */
+.cursor-glow {
+  position: fixed;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(61, 107, 99, 0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s;
+  opacity: 0;
+}
+.cursor-glow.active {
+  opacity: 1;
+}
+
+/* ── Page load animation ── */
+@keyframes pageEnter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+body {
+  animation: pageEnter 0.6s ease-out;
+}
+
+/* ── Selection color ── */
+::selection {
+  background: rgba(61, 107, 99, 0.2);
+  color: var(--teal-dark);
+}
